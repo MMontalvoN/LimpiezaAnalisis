@@ -1,0 +1,919 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\title{Tipología y ciclo de vida de los datos}
+\author{Miguel Ángel Montalvo Navidad}
+\date{Enero 2022}
+
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Tipología y ciclo de vida de los datos},
+  pdfauthor={Miguel Ángel Montalvo Navidad},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{48,48,48}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.81,0.69}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.50,0.62,0.50}{\textbf{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.80,0.80,0.80}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.86,0.64,0.64}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.80,0.80,0.80}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.86,0.64,0.64}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.50,0.62,0.50}{#1}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.50,0.62,0.50}{\textbf{#1}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.86,0.64,0.64}{\textbf{#1}}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.94,0.87,0.69}{#1}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.87,0.87,0.75}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.86,0.86,0.80}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.50,0.62,0.50}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.76,0.75,0.62}{#1}}
+\newcommand{\ExtensionTok}[1]{\textcolor[rgb]{0.80,0.80,0.80}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.75,0.75,0.82}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.94,0.94,0.56}{#1}}
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.80,0.80,0.80}{#1}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.50,0.62,0.50}{\textbf{#1}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.94,0.87,0.69}{#1}}
+\newcommand{\NormalTok}[1]{\textcolor[rgb]{0.80,0.80,0.80}{#1}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.94,0.94,0.82}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.94,0.94,0.56}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{1.00,0.81,0.69}{\textbf{#1}}}
+\newcommand{\RegionMarkerTok}[1]{\textcolor[rgb]{0.80,0.80,0.80}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.86,0.64,0.64}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.80,0.58,0.58}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.80,0.58,0.58}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.80,0.80,0.80}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.80,0.58,0.58}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.50,0.62,0.50}{\textbf{#1}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{2}
+\tableofcontents
+}
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{resoluciuxf3n}{%
+\section{Resolución}\label{resoluciuxf3n}}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{descripciuxf3n-del-dataset}{%
+\subsection{Descripción del dataset}\label{descripciuxf3n-del-dataset}}
+
+A continuación, utilizaremos el juego de datos ``Titanic.csv'' que
+recoge datos sobre el famoso transatlántico de pasajeros británico.
+
+\hypertarget{importancia-y-objetivos-de-los-anuxe1lisis}{%
+\subsection{Importancia y objetivos de los
+análisis}\label{importancia-y-objetivos-de-los-anuxe1lisis}}
+
+\begin{itemize}
+\tightlist
+\item
+  Las actividades que llevaremos a cabo en el desarrollo de la siguiente
+  práctica hace referenica a la limpieza y análisis de los datos para un
+  proyecto de datos. Tiene como objetivo obtener un dominio de los datos
+  para su posterior análisis. Tenemos que conocer profundamente los
+  datos tanto en su formato como contenido. Tareas típicas pueden ser la
+  selección de características o variables, la preparación del juego de
+  datos para posteriormente ser consumido por un algoritmo e intentar
+  extraer el máximo conocimiento posible de los datos.
+\end{itemize}
+
+\hypertarget{limpieza-de-los-datos}{%
+\subsection{Limpieza de los datos}\label{limpieza-de-los-datos}}
+
+\begin{itemize}
+\tightlist
+\item
+  Como paso previo procedemos a instalamos y cargar las librerías
+  ggplot2 y dplry.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# https://cran.r{-}project.org/web/packages/ggplot2/index.html}
+\ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\FunctionTok{require}\NormalTok{(}\StringTok{\textquotesingle{}ggplot2\textquotesingle{}}\NormalTok{)) }\FunctionTok{install.packages}\NormalTok{(}\StringTok{\textquotesingle{}ggplot2\textquotesingle{}}\NormalTok{); }\FunctionTok{library}\NormalTok{(}\StringTok{\textquotesingle{}ggplot2\textquotesingle{}}\NormalTok{)}
+\CommentTok{\# https://cran.r{-}project.org/web/packages/dplyr/index.html}
+\ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\FunctionTok{require}\NormalTok{(}\StringTok{\textquotesingle{}dplyr\textquotesingle{}}\NormalTok{)) }\FunctionTok{install.packages}\NormalTok{(}\StringTok{\textquotesingle{}dplyr\textquotesingle{}}\NormalTok{); }\FunctionTok{library}\NormalTok{(}\StringTok{\textquotesingle{}dplyr\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Ahora cargaremos el fichero de datos.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{totalData }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{\textquotesingle{}titanic.csv\textquotesingle{}}\NormalTok{,}\AttributeTok{stringsAsFactors =} \ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{filas}\OtherTok{=}\FunctionTok{dim}\NormalTok{(totalData)[}\DecValTok{1}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Procedemos a guardar los datos filtrados por tripulación ``engineering
+  crew'' para hacer análisis posteriores.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{totalData\_crew}\OtherTok{=}\FunctionTok{subset}\NormalTok{(totalData, totalData}\SpecialCharTok{$}\NormalTok{class}\SpecialCharTok{==}\StringTok{"engineering crew"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Con el siguiente comando verificamos la estructura del data set
+  principal.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{str}\NormalTok{(totalData)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 'data.frame':    2207 obs. of  11 variables:
+##  $ name    : chr  "Abbing, Mr. Anthony" "Abbott, Mr. Eugene Joseph" "Abbott, Mr. Rossmore Edward" "Abbott, Mrs. Rhoda Mary 'Rosa'" ...
+##  $ gender  : chr  "male" "male" "male" "female" ...
+##  $ age     : num  42 13 16 39 16 25 30 28 27 20 ...
+##  $ class   : chr  "3rd" "3rd" "3rd" "3rd" ...
+##  $ embarked: chr  "S" "S" "S" "S" ...
+##  $ country : chr  "United States" "United States" "United States" "England" ...
+##  $ ticketno: int  5547 2673 2673 2673 348125 348122 3381 3381 2699 3101284 ...
+##  $ fare    : num  7.11 20.05 20.05 20.05 7.13 ...
+##  $ sibsp   : int  0 0 1 1 0 0 1 1 0 0 ...
+##  $ parch   : int  0 2 1 1 0 0 0 0 0 0 ...
+##  $ survived: chr  "no" "no" "no" "yes" ...
+\end{verbatim}
+
+Podemos observar que tenemos 2207 registros que se corresponden a los
+viajeros y tripulación del crucero y 11 variables que los caracterizan.
+
+Revisamos la descripción de las variables contenidas al fichero y si los
+tipos de variable se corresponde al que hemos cargado:
+
+\textbf{name} string with the name of the passenger.
+
+\textbf{gender} factor with levels male and female.
+
+\textbf{age} numeric value with the persons age on the day of the
+sinking. The age of babies (under 12 months) is given as a fraction of
+one year (1/month).
+
+\textbf{class} factor specifying the class for passengers or the type of
+service aboard for crew members.
+
+\textbf{embarked} factor with the persons place of of embarkment.
+
+\textbf{country} factor with the persons home country.
+
+\textbf{ticketno} numeric value specifying the persons ticket number (NA
+for crew members).
+
+\textbf{fare} numeric value with the ticket price (NA for crew members,
+musicians and employees of the shipyard company).
+
+\textbf{sibsp} ordered factor specifying the number if siblings/spouses
+aboard; adopted from Vanderbild data set.
+
+\textbf{parch} an ordered factor specifying the number of
+parents/children aboard; adopted from Vanderbild data set.
+
+\textbf{survived} a factor with two levels (no and yes) specifying
+whether the person has survived the sinking.
+
+\hypertarget{anuxe1lisis-de-los-datos}{%
+\subsection{Análisis de los datos}\label{anuxe1lisis-de-los-datos}}
+
+\begin{itemize}
+\tightlist
+\item
+  Ahora procedemos a sacar algunas estadísticas básicas y después
+  analizaremos los atributos con valores vacíos.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(totalData)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      name              gender               age             class          
+##  Length:2207        Length:2207        Min.   : 0.1667   Length:2207       
+##  Class :character   Class :character   1st Qu.:22.0000   Class :character  
+##  Mode  :character   Mode  :character   Median :29.0000   Mode  :character  
+##                                        Mean   :30.4367                     
+##                                        3rd Qu.:38.0000                     
+##                                        Max.   :74.0000                     
+##                                        NA's   :2                           
+##    embarked           country             ticketno            fare        
+##  Length:2207        Length:2207        Min.   :      2   Min.   :  3.030  
+##  Class :character   Class :character   1st Qu.:  14262   1st Qu.:  7.181  
+##  Mode  :character   Mode  :character   Median : 111427   Median : 14.090  
+##                                        Mean   : 284216   Mean   : 33.405  
+##                                        3rd Qu.: 347077   3rd Qu.: 31.061  
+##                                        Max.   :3101317   Max.   :512.061  
+##                                        NA's   :891       NA's   :916      
+##      sibsp            parch          survived        
+##  Min.   :0.0000   Min.   :0.0000   Length:2207       
+##  1st Qu.:0.0000   1st Qu.:0.0000   Class :character  
+##  Median :0.0000   Median :0.0000   Mode  :character  
+##  Mean   :0.4996   Mean   :0.3856                     
+##  3rd Qu.:1.0000   3rd Qu.:0.0000                     
+##  Max.   :8.0000   Max.   :9.0000                     
+##  NA's   :900      NA's   :900
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  Por ejemplo estadísticas de valores vacíos.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{colSums}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(totalData))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##     name   gender      age    class embarked  country ticketno     fare 
+##        0        0        2        0        0       81      891      916 
+##    sibsp    parch survived 
+##      900      900        0
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{colSums}\NormalTok{(totalData}\SpecialCharTok{==}\StringTok{""}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##     name   gender      age    class embarked  country ticketno     fare 
+##        0        0       NA        0        0       NA       NA       NA 
+##    sibsp    parch survived 
+##       NA       NA        0
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  Para estos casos (81) de país, asignamos valor ``Desconocido'' para
+  los valores vacíos de la variable ``country''.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{totalData}\SpecialCharTok{$}\NormalTok{country[}\FunctionTok{is.na}\NormalTok{(totalData}\SpecialCharTok{$}\NormalTok{country)] }\OtherTok{\textless{}{-}} \StringTok{"Desconocido"}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Para el caso de edad (2), asignamos la media para valores vacíos de la
+  variable ``age''.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{totalData}\SpecialCharTok{$}\NormalTok{age[}\FunctionTok{is.na}\NormalTok{(totalData}\SpecialCharTok{$}\NormalTok{age)] }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(totalData}\SpecialCharTok{$}\NormalTok{age,}\AttributeTok{na.rm=}\NormalTok{T)}
+\end{Highlighting}
+\end{Shaded}
+
+De la información mostrada destacamos que el pasajero más joven tenía 6
+meses y el más grande 74 años. La media de edad la tenían en 30 años.
+También podemos ver 891 sin billete. Revisaremos si se corresponde a la
+tripulación. También podemos observar el que se pagó por el billete. En
+este caso se entienden las discrepancias en la fiabilidad de este dato.
+Parece que los pasajeros que embarcaron a Southampton hacían transbordo
+de un barco que tenía la tripulación en huelga y por eso no tuvieron que
+pagar lo que explicaría la diferencia. Recordemos que la tripulación no
+pagaba. Sibsp y parch también muestran datos interesantes el viajero con
+quien más familiar viajaba eran 8 hermanos o mujer y 9 hijos o
+paro/madre.
+
+Si observamos los NA (valores nulos) vemos que los datos están bastante
+bien. Decidimos sustituir el valor NA de country por Desconocido por una
+mayor legibilidad. También proponemos sustituir los NA de age por la
+media a pesar de que realmente no hace falta.
+
+Es curios como los valores NA de sibsp y parch nos permite deducir que
+viajaban muchas familias. De hecho a simple vista, restante la
+tripulación la gente que viajaba sola era mínima. Este dato la podríamos
+contrastar también. Sería interesante relacionar la mortalidad del
+accidente con el tamaño de las familias que viajaban.
+
+\hypertarget{pruebas-estaduxedsticas}{%
+\subsection{Pruebas estadísticas}\label{pruebas-estaduxedsticas}}
+
+\begin{itemize}
+\tightlist
+\item
+  Ahora añadiremos un campo nuevo a los datos. Este campos contendrá el
+  valor de la edad discretitzada con un método simple de intervalos de
+  igual amplitud.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(totalData[,}\StringTok{"age"}\NormalTok{])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##  0.1667 22.0000 29.0000 30.4367 38.0000 74.0000
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  Procedemos a discretizar con intervalos.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{totalData[}\StringTok{"segmento\_edad"}\NormalTok{] }\OtherTok{\textless{}{-}} \FunctionTok{cut}\NormalTok{(totalData}\SpecialCharTok{$}\NormalTok{age, }\AttributeTok{breaks =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{10}\NormalTok{,}\DecValTok{20}\NormalTok{,}\DecValTok{30}\NormalTok{,}\DecValTok{40}\NormalTok{,}\DecValTok{50}\NormalTok{,}\DecValTok{60}\NormalTok{,}\DecValTok{70}\NormalTok{,}\DecValTok{100}\NormalTok{), }\AttributeTok{labels =} \FunctionTok{c}\NormalTok{(}\StringTok{"0{-}9"}\NormalTok{, }\StringTok{"10{-}19"}\NormalTok{, }\StringTok{"20{-}29"}\NormalTok{, }\StringTok{"30{-}39"}\NormalTok{,}\StringTok{"40{-}49"}\NormalTok{,}\StringTok{"50{-}59"}\NormalTok{,}\StringTok{"60{-}69"}\NormalTok{,}\StringTok{"70{-}79"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Y Observamos los datos discretizados.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{head}\NormalTok{(totalData)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                             name gender age class embarked       country
+## 1            Abbing, Mr. Anthony   male  42   3rd        S United States
+## 2      Abbott, Mr. Eugene Joseph   male  13   3rd        S United States
+## 3    Abbott, Mr. Rossmore Edward   male  16   3rd        S United States
+## 4 Abbott, Mrs. Rhoda Mary 'Rosa' female  39   3rd        S       England
+## 5    Abelseth, Miss. Karen Marie female  16   3rd        S        Norway
+## 6 Abelseth, Mr. Olaus JÃ¸rgensen   male  25   3rd        S United States
+##   ticketno  fare sibsp parch survived segmento_edad
+## 1     5547  7.11     0     0       no         40-49
+## 2     2673 20.05     0     2       no         10-19
+## 3     2673 20.05     1     1       no         10-19
+## 4     2673 20.05     1     1      yes         30-39
+## 5   348125  7.13     0     0      yes         10-19
+## 6   348122  7.13     0     0      yes         20-29
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  Ahora podemos ver como se agrupaban por grupos de edad.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(totalData}\SpecialCharTok{$}\NormalTok{segmento\_edad,}\AttributeTok{main=}\StringTok{"Número de pasajeros por grupos de edad"}\NormalTok{,}\AttributeTok{xlab=}\StringTok{"Edad"}\NormalTok{, }\AttributeTok{ylab=}\StringTok{"Cantidad"}\NormalTok{,}\AttributeTok{col =} \StringTok{"ivory"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{LimpiezaAnalisis_Titanic_files/figure-latex/unnamed-chunk-12-1.pdf}
+
+\begin{itemize}
+\tightlist
+\item
+  Procedemos a repetir los pasos anteriores pero solo sobre el
+  subconjunto de tripulación filtrado antes ``engineering crew''.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{totalData\_crew[}\StringTok{"segmento\_edad"}\NormalTok{] }\OtherTok{\textless{}{-}} \FunctionTok{cut}\NormalTok{(totalData\_crew}\SpecialCharTok{$}\NormalTok{age, }\AttributeTok{breaks =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{10}\NormalTok{,}\DecValTok{20}\NormalTok{,}\DecValTok{30}\NormalTok{,}\DecValTok{40}\NormalTok{,}\DecValTok{50}\NormalTok{,}\DecValTok{60}\NormalTok{,}\DecValTok{70}\NormalTok{,}\DecValTok{100}\NormalTok{), }\AttributeTok{labels =} \FunctionTok{c}\NormalTok{(}\StringTok{"0{-}9"}\NormalTok{, }\StringTok{"10{-}19"}\NormalTok{, }\StringTok{"20{-}29"}\NormalTok{, }\StringTok{"30{-}39"}\NormalTok{,}\StringTok{"40{-}49"}\NormalTok{,}\StringTok{"50{-}59"}\NormalTok{,}\StringTok{"60{-}69"}\NormalTok{,}\StringTok{"70{-}79"}\NormalTok{))}
+\FunctionTok{plot}\NormalTok{(totalData\_crew}\SpecialCharTok{$}\NormalTok{segmento\_edad,}\AttributeTok{main=}\StringTok{"Número de tripulantes por grupos de edad"}\NormalTok{,}\AttributeTok{xlab=}\StringTok{"Edad"}\NormalTok{, }\AttributeTok{ylab=}\StringTok{"Cantidad"}\NormalTok{,}\AttributeTok{col =} \StringTok{"ivory"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{LimpiezaAnalisis_Titanic_files/figure-latex/unnamed-chunk-13-1.pdf}
+De la discretización de la edad observamos que realmente la gente que
+viajaba era muy joven. El segmento más grande era de 20 a 29 años.
+También podemos observar la juventud de la tripulación del crucero.
+
+\begin{itemize}
+\tightlist
+\item
+  Como alternativa a la discretización realizada discretizaremos ahora
+  edad con kmeans.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# https://cran.r{-}project.org/web/packages/arules/index.html}
+\ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\FunctionTok{require}\NormalTok{(}\StringTok{\textquotesingle{}arules\textquotesingle{}}\NormalTok{)) }\FunctionTok{install.packages}\NormalTok{(}\StringTok{\textquotesingle{}arules\textquotesingle{}}\NormalTok{); }\FunctionTok{library}\NormalTok{(}\StringTok{\textquotesingle{}arules\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: arules
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: Matrix
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'arules'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:dplyr':
+## 
+##     recode
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:base':
+## 
+##     abbreviate, write
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{2}\NormalTok{)}
+\FunctionTok{table}\NormalTok{(}\FunctionTok{discretize}\NormalTok{(totalData}\SpecialCharTok{$}\NormalTok{age, }\StringTok{"cluster"}\NormalTok{ ))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## [0.167,25.4)    [25.4,40)      [40,74] 
+##          826          916          465
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{hist}\NormalTok{(totalData}\SpecialCharTok{$}\NormalTok{age, }\AttributeTok{main=}\StringTok{"Número de pasajeros por grupos de edad con kmeans"}\NormalTok{,}\AttributeTok{xlab=}\StringTok{"Edad"}\NormalTok{, }\AttributeTok{ylab=}\StringTok{"Cantidad"}\NormalTok{,}\AttributeTok{col =} \StringTok{"ivory"}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{v=}\FunctionTok{discretize}\NormalTok{(totalData}\SpecialCharTok{$}\NormalTok{age, }\AttributeTok{method=}\StringTok{"cluster"}\NormalTok{, }\AttributeTok{onlycuts=}\ConstantTok{TRUE}\NormalTok{),}\AttributeTok{col=}\StringTok{"red"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{LimpiezaAnalisis_Titanic_files/figure-latex/unnamed-chunk-14-1.pdf}
+
+\begin{itemize}
+\tightlist
+\item
+  Podemos observar que sin pasar ningún argumento y que el algoritmo
+  escoja el conjunto de particiones se muestran tres clústeres que
+  agrupan las edades en las franjas mencionadas. Podemos asignar el
+  propio clúster como una variable más al dataset para trabajar después.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{totalData}\SpecialCharTok{$}\NormalTok{edad\_KM }\OtherTok{\textless{}{-}}\NormalTok{ (}\FunctionTok{discretize}\NormalTok{(totalData}\SpecialCharTok{$}\NormalTok{age, }\StringTok{"cluster"}\NormalTok{ ))}
+\FunctionTok{head}\NormalTok{(totalData)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                             name gender age class embarked       country
+## 1            Abbing, Mr. Anthony   male  42   3rd        S United States
+## 2      Abbott, Mr. Eugene Joseph   male  13   3rd        S United States
+## 3    Abbott, Mr. Rossmore Edward   male  16   3rd        S United States
+## 4 Abbott, Mrs. Rhoda Mary 'Rosa' female  39   3rd        S       England
+## 5    Abelseth, Miss. Karen Marie female  16   3rd        S        Norway
+## 6 Abelseth, Mr. Olaus JÃ¸rgensen   male  25   3rd        S United States
+##   ticketno  fare sibsp parch survived segmento_edad      edad_KM
+## 1     5547  7.11     0     0       no         40-49    [38.7,74]
+## 2     2673 20.05     0     2       no         10-19 [0.167,23.9)
+## 3     2673 20.05     1     1       no         10-19 [0.167,23.9)
+## 4     2673 20.05     1     1      yes         30-39    [38.7,74]
+## 5   348125  7.13     0     0      yes         10-19 [0.167,23.9)
+## 6   348122  7.13     0     0      yes         20-29  [23.9,38.7)
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  Ahora normalizaremos la edad de los pasajeros por el máximo, añadiendo
+  un nuevo valor a los datos que contendrá el valor.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{totalData}\SpecialCharTok{$}\NormalTok{age\_NM }\OtherTok{\textless{}{-}}\NormalTok{ (totalData}\SpecialCharTok{$}\NormalTok{age}\SpecialCharTok{/}\FunctionTok{max}\NormalTok{(totalData[,}\StringTok{"age"}\NormalTok{]))}
+\FunctionTok{head}\NormalTok{(totalData}\SpecialCharTok{$}\NormalTok{age\_NM)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.5675676 0.1756757 0.2162162 0.5270270 0.2162162 0.3378378
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  Supongamos que queremos normalizar por la diferencia para ubicar entre
+  0 y 1 la variable edad del pasajero dado que el algoritmo de minería
+  que utilizaremos así lo requiere. observamos la distribución de la
+  variable original y las tres generadas
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{totalData}\SpecialCharTok{$}\NormalTok{age\_ND }\OtherTok{=}\NormalTok{ (totalData}\SpecialCharTok{$}\NormalTok{age}\SpecialCharTok{{-}}\FunctionTok{min}\NormalTok{(totalData}\SpecialCharTok{$}\NormalTok{age))}\SpecialCharTok{/}\NormalTok{(}\FunctionTok{max}\NormalTok{(totalData}\SpecialCharTok{$}\NormalTok{age)}\SpecialCharTok{{-}}\FunctionTok{min}\NormalTok{(totalData}\SpecialCharTok{$}\NormalTok{age))}
+
+\FunctionTok{max}\NormalTok{(totalData}\SpecialCharTok{$}\NormalTok{age)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 74
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{min}\NormalTok{(totalData}\SpecialCharTok{$}\NormalTok{age)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.1666667
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{hist}\NormalTok{(totalData}\SpecialCharTok{$}\NormalTok{age,}\AttributeTok{xlab=}\StringTok{"Edad"}\NormalTok{, }\AttributeTok{col=}\StringTok{"ivory"}\NormalTok{,}\AttributeTok{ylab=}\StringTok{"Cantidad"}\NormalTok{, }\AttributeTok{main=}\StringTok{"Número de pasajeros por grupos de edad"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{LimpiezaAnalisis_Titanic_files/figure-latex/unnamed-chunk-17-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{hist}\NormalTok{(totalData}\SpecialCharTok{$}\NormalTok{age\_NM,}\AttributeTok{xlab=}\StringTok{"Edad normalizada por el máximo"}\NormalTok{, }\AttributeTok{ylab=}\StringTok{"Cantidad"}\NormalTok{,}\AttributeTok{col=}\StringTok{"ivory"}\NormalTok{, }\AttributeTok{main=}\StringTok{"Número de pasajeros por grupos de edad"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{LimpiezaAnalisis_Titanic_files/figure-latex/unnamed-chunk-17-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{hist}\NormalTok{(totalData}\SpecialCharTok{$}\NormalTok{age\_ND,}\AttributeTok{xlab=}\StringTok{"Edad normalizada por la diferencia"}\NormalTok{,}\AttributeTok{ylab=}\StringTok{"Cantidad"}\NormalTok{, }\AttributeTok{col=}\StringTok{"ivory"}\NormalTok{, }\AttributeTok{main=}\StringTok{"Número de pasajeros por grupos de edad"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{LimpiezaAnalisis_Titanic_files/figure-latex/unnamed-chunk-17-3.pdf}
+
+\hypertarget{procesos-de-anuxe1lisis-visuales-del-juego-de-datos}{%
+\subsection{Procesos de análisis visuales del juego de
+datos}\label{procesos-de-anuxe1lisis-visuales-del-juego-de-datos}}
+
+\begin{itemize}
+\tightlist
+\item
+  Nos proponemos analizar las relaciones entre las diferentes variables
+  del juego de datos para ver si se relacionan y como. Visualizamos la
+  relación entre las variables ``gender'' y ``survived'':
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data=}\NormalTok{totalData[}\DecValTok{1}\SpecialCharTok{:}\NormalTok{filas,],}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{gender,}\AttributeTok{fill=}\NormalTok{survived))}\SpecialCharTok{+}\FunctionTok{geom\_bar}\NormalTok{()}\SpecialCharTok{+}\FunctionTok{ggtitle}\NormalTok{(}\StringTok{"Relación entre las variables gender y survived"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{LimpiezaAnalisis_Titanic_files/figure-latex/unnamed-chunk-18-1.pdf}
+* Otro punto de vista. Survived como función de Embarked:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data=}\NormalTok{totalData[}\DecValTok{1}\SpecialCharTok{:}\NormalTok{filas,],}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{embarked,}\AttributeTok{fill=}\NormalTok{survived))}\SpecialCharTok{+}\FunctionTok{geom\_bar}\NormalTok{(}\AttributeTok{position=}\StringTok{"fill"}\NormalTok{)}\SpecialCharTok{+}\FunctionTok{ylab}\NormalTok{(}\StringTok{"Frequència"}\NormalTok{)}\SpecialCharTok{+}\FunctionTok{ggtitle}\NormalTok{(}\StringTok{"Survived como función de Embarked"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{LimpiezaAnalisis_Titanic_files/figure-latex/unnamed-chunk-19-1.pdf}
+
+\begin{itemize}
+\item
+  En la primera gráfica podemos observar fácilmente la cantidad de
+  mujeres que viajaban respecto hombres y observar los que no
+  sobrevivieron. Numéricamente el número de hombres y mujeres
+  supervivientes es similar.
+\item
+  En la segunda gráfica de forma porcentual observamos los puertos de
+  embarque y los porcentajes de supervivencia en función del puerto. Se
+  podría trabajar el puerto C (Cherburgo) para ver de explicar la
+  diferencia en los datos. Quizás porcentualmente embarcaron más mujeres
+  o niños\ldots{} ¿O gente de primera clase?
+\end{itemize}
+
+*Obtenemos ahora una matriz de porcentajes de frecuencia. Vemos, por
+ejemplo que la probabilidad de sobrevivir si se embarcó en ``C'' es de
+un 56.45\%
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{t}\OtherTok{\textless{}{-}}\FunctionTok{table}\NormalTok{(totalData[}\DecValTok{1}\SpecialCharTok{:}\NormalTok{filas,]}\SpecialCharTok{$}\NormalTok{embarked,totalData[}\DecValTok{1}\SpecialCharTok{:}\NormalTok{filas,]}\SpecialCharTok{$}\NormalTok{survived)}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\FunctionTok{dim}\NormalTok{(t)[}\DecValTok{1}\NormalTok{])\{}
+\NormalTok{    t[i,]}\OtherTok{\textless{}{-}}\NormalTok{t[i,]}\SpecialCharTok{/}\FunctionTok{sum}\NormalTok{(t[i,])}\SpecialCharTok{*}\DecValTok{100}
+\NormalTok{\}}
+\NormalTok{t}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    
+##           no      yes
+##   B 78.17259 21.82741
+##   C 43.54244 56.45756
+##   Q 64.22764 35.77236
+##   S 70.85396 29.14604
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  Veamos ahora como en un mismo gráfico de frecuencias podemos trabajar
+  con 3 variables: Embarked, Survived y class. Mostramos el gráfico de
+  embarcados por class:
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ totalData[}\DecValTok{1}\SpecialCharTok{:}\NormalTok{filas,],}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{embarked,}\AttributeTok{fill=}\NormalTok{survived))}\SpecialCharTok{+}\FunctionTok{geom\_bar}\NormalTok{(}\AttributeTok{position=}\StringTok{"fill"}\NormalTok{)}\SpecialCharTok{+}\FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{class)}\SpecialCharTok{+}\FunctionTok{ggtitle}\NormalTok{(}\StringTok{"Pasajeros por clase, puerto de origen y relación con survived"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{LimpiezaAnalisis_Titanic_files/figure-latex/unnamed-chunk-21-1.pdf}
+
+\begin{itemize}
+\item
+  Aquí ya podemos extraer mucha información. Como propuesta de mejora se
+  podría hacer un gráfico similar trabajando solo la clase. Habría que
+  unificar toda la tripulación a una única categoría.
+\item
+  Comparamos ahora dos gráficos de frecuencias: Survived-SibSp y
+  Survived-Parch
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ totalData[}\DecValTok{1}\SpecialCharTok{:}\NormalTok{filas,],}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{sibsp,}\AttributeTok{fill=}\NormalTok{survived))}\SpecialCharTok{+}\FunctionTok{geom\_bar}\NormalTok{()}\SpecialCharTok{+}\FunctionTok{ggtitle}\NormalTok{(}\StringTok{"Sobrevivir en función de tener a bordo cónyuges y/o hermanos"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{LimpiezaAnalisis_Titanic_files/figure-latex/unnamed-chunk-22-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ totalData[}\DecValTok{1}\SpecialCharTok{:}\NormalTok{filas,],}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{parch,}\AttributeTok{fill=}\NormalTok{survived))}\SpecialCharTok{+}\FunctionTok{geom\_bar}\NormalTok{()}\SpecialCharTok{+}\FunctionTok{ggtitle}\NormalTok{(}\StringTok{"Sobrevivir en función de tener a bordo padres y/o hijos"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{LimpiezaAnalisis_Titanic_files/figure-latex/unnamed-chunk-22-2.pdf}
+
+\begin{itemize}
+\item
+  Vemos como la forma de estos dos gráficos es similar. Este hecho nos
+  puede indicar presencia de correlaciones altas. Hecho previsible en
+  función de la descripción de las variables.
+\item
+  Veamos un ejemplo de construcción de una variable nueva: Tamaño de
+  familia.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{totalData}\SpecialCharTok{$}\NormalTok{FamilySize }\OtherTok{\textless{}{-}}\NormalTok{ totalData}\SpecialCharTok{$}\NormalTok{sibsp }\SpecialCharTok{+}\NormalTok{ totalData}\SpecialCharTok{$}\NormalTok{parch }\SpecialCharTok{+}\DecValTok{1}\NormalTok{;}
+\NormalTok{totalData1}\OtherTok{\textless{}{-}}\NormalTok{totalData[}\DecValTok{1}\SpecialCharTok{:}\NormalTok{filas,]}
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ totalData1[}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(totalData[}\DecValTok{1}\SpecialCharTok{:}\NormalTok{filas,]}\SpecialCharTok{$}\NormalTok{FamilySize),],}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{FamilySize,}\AttributeTok{fill=}\NormalTok{survived))}\SpecialCharTok{+}\FunctionTok{geom\_histogram}\NormalTok{(}\AttributeTok{binwidth =}\DecValTok{1}\NormalTok{,}\AttributeTok{position=}\StringTok{"fill"}\NormalTok{)}\SpecialCharTok{+}\FunctionTok{ylab}\NormalTok{(}\StringTok{"Frecuencia"}\NormalTok{)}\SpecialCharTok{+}\FunctionTok{ggtitle}\NormalTok{(}\StringTok{"Sobrevivir en función del número de familiares a bordo"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{LimpiezaAnalisis_Titanic_files/figure-latex/unnamed-chunk-23-1.pdf}
+* Se confirma el hecho de que los pasajeros viajaban mayoritariamente en
+familia. No podemos afirmar que el tamaño de la familia tuviera nada que
+ver con la posibilidad de sobrevivir pues nos tememos que
+estadísticamente el hecho de haber más familias de alrededor de cuatro
+miembros debería de ser habitual. Es un punto de partida para investigar
+más.
+
+\begin{itemize}
+\tightlist
+\item
+  Veamos ahora dos gráficos que nos comparan los atributos Age y
+  Survived. Observamos como el parámetro position=``fill'' nos da la
+  proporción acumulada de un atributo dentro de otro.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ totalData1[}\SpecialCharTok{!}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(totalData[}\DecValTok{1}\SpecialCharTok{:}\NormalTok{filas,]}\SpecialCharTok{$}\NormalTok{age)),],}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{age,}\AttributeTok{fill=}\NormalTok{survived))}\SpecialCharTok{+}\FunctionTok{geom\_histogram}\NormalTok{(}\AttributeTok{binwidth =}\DecValTok{3}\NormalTok{)}\SpecialCharTok{+}\FunctionTok{ggtitle}\NormalTok{(}\StringTok{"Sobrevivir en función de edad"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{LimpiezaAnalisis_Titanic_files/figure-latex/unnamed-chunk-24-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ totalData1[}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(totalData[}\DecValTok{1}\SpecialCharTok{:}\NormalTok{filas,]}\SpecialCharTok{$}\NormalTok{age),],}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{age,}\AttributeTok{fill=}\NormalTok{survived))}\SpecialCharTok{+}\FunctionTok{geom\_histogram}\NormalTok{(}\AttributeTok{binwidth =} \DecValTok{3}\NormalTok{,}\AttributeTok{position=}\StringTok{"fill"}\NormalTok{)}\SpecialCharTok{+}\FunctionTok{ylab}\NormalTok{(}\StringTok{"Frecuencia"}\NormalTok{)}\SpecialCharTok{+}\FunctionTok{ggtitle}\NormalTok{(}\StringTok{"Sobrevivir en función de edad"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{LimpiezaAnalisis_Titanic_files/figure-latex/unnamed-chunk-24-2.pdf}
+
+\begin{itemize}
+\item
+  Observamos como el parámetro position=``hijo'' nos da la proporción
+  acumulada de un atributo dentro de otro. Parece que los niños tuvieron
+  más posibilidad de salvarse.
+\item
+  Vamos a probar si hay una correlación entre la edad del pasajero y el
+  que pagó por el viaje.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# https://cran.r{-}project.org/web/packages/tidyverse/index.html}
+\ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\FunctionTok{require}\NormalTok{(}\StringTok{\textquotesingle{}tidyverse\textquotesingle{}}\NormalTok{)) }\FunctionTok{install.packages}\NormalTok{(}\StringTok{\textquotesingle{}tidyverse\textquotesingle{}}\NormalTok{); }\FunctionTok{library}\NormalTok{(}\StringTok{\textquotesingle{}tidyverse\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: tidyverse
+\end{verbatim}
+
+\begin{verbatim}
+## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --
+\end{verbatim}
+
+\begin{verbatim}
+## v tibble  3.1.5     v purrr   0.3.4
+## v tidyr   1.1.4     v stringr 1.4.0
+## v readr   2.0.2     v forcats 0.5.1
+\end{verbatim}
+
+\begin{verbatim}
+## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x tidyr::expand()  masks Matrix::expand()
+## x dplyr::filter()  masks stats::filter()
+## x dplyr::lag()     masks stats::lag()
+## x tidyr::pack()    masks Matrix::pack()
+## x arules::recode() masks dplyr::recode()
+## x tidyr::unpack()  masks Matrix::unpack()
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cor.test}\NormalTok{(}\AttributeTok{x =}\NormalTok{ totalData}\SpecialCharTok{$}\NormalTok{age, }\AttributeTok{y =}\NormalTok{ totalData}\SpecialCharTok{$}\NormalTok{fare, }\AttributeTok{method =} \StringTok{"pearson"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Pearson's product-moment correlation
+## 
+## data:  totalData$age and totalData$fare
+## t = 6.7199, df = 1289, p-value = 2.722e-11
+## alternative hypothesis: true correlation is not equal to 0
+## 95 percent confidence interval:
+##  0.1307297 0.2361631
+## sample estimates:
+##       cor 
+## 0.1839756
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ totalData, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ age, }\AttributeTok{y =} \FunctionTok{log}\NormalTok{(fare))) }\SpecialCharTok{+} \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{color =} \StringTok{"gray30"}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{geom\_smooth}\NormalTok{(}\AttributeTok{color =} \StringTok{"firebrick"}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{theme\_bw}\NormalTok{() }\SpecialCharTok{+}\FunctionTok{ggtitle}\NormalTok{(}\StringTok{"Correlación entre precio billete y edad"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## `geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Removed 916 rows containing non-finite values (stat_smooth).
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Removed 916 rows containing missing values (geom_point).
+\end{verbatim}
+
+\includegraphics{LimpiezaAnalisis_Titanic_files/figure-latex/unnamed-chunk-25-1.pdf}
+
+\begin{itemize}
+\tightlist
+\item
+  Cómo podemos observar no parece haber correlación lineal entre la edad
+  del pasajero y el precio del billete. El diagrama de dispersión
+  tampoco apunta a ningún tipo de relación no lineal evidente.
+\end{itemize}
+
+\hypertarget{conclusiones}{%
+\subsection{Conclusiones}\label{conclusiones}}
+
+Los datos tienen una calidad correcta y están mayoritariamente bien
+informados. Disponen de una variable de clase ``survived'' que los hace
+aptos para un clasificador. A parte de la mayor supervivencia de mujeres
+y niños y de pasajeros de primera clase podemos observar la juventud de
+los pasajeros y la tripulación. Se observa también una gran cantidad de
+personas que viajaban en familia.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{recursos}{%
+\section{Recursos}\label{recursos}}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+Los siguientes recursos son de utilidad para la realización de la
+práctica: * Calvo M., Subirats L., Pérez D. (2019). Introducción a la
+limpieza y análisis de los datos. Editorial UOC. * Megan Squire (2015).
+Clean Data. Packt Publishing Ltd. * Jiawei Han, Micheine Kamber, Jian
+Pei (2012). Data mining: concepts and techniques. Morgan Kaufmann. *
+Jason W. Osborne (2010). Data Cleaning Basics: Best Practices in Dealing
+with Extreme Scores. Newborn and Infant Nursing Reviews; 10 (1):
+pp.~1527-3369. \emph{Peter Dalgaard (2008). Introductory statistics with
+R. Springer Science \& Business Media. Wes McKinney (2012). Python for
+Data Analysis. O'Reilley Media, Inc. } Tutorial de Github
+\url{https://guides.github.com/activities/hello-world}.
+
+\end{document}

@@ -1,0 +1,287 @@
+---
+title: 'Tipología y ciclo de vida de los datos'
+author: "Miguel Ángel Montalvo Navidad"
+date: "Enero 2022"
+subtitle: 'https://github.com/MMontalvoN/LimpiezaAnalisis'
+output:
+  html_document:
+    highlight: default
+    number_sections: yes
+    theme: cosmo
+    toc: yes
+    toc_depth: 2
+    includes:
+      in_header: LimpiezaAnalisis-header.html
+  word_document: default
+  pdf_document:
+    highlight: zenburn
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+****
+# Resolución
+****
+## Descripción del dataset
+A continuación, utilizaremos el juego de datos "Titanic.csv" que recoge datos sobre el famoso transatlántico de pasajeros británico.
+
+
+
+## Importancia y objetivos de los análisis
+* Las actividades que llevaremos a cabo en el desarrollo de la siguiente práctica hace referenica a la limpieza y análisis de los datos para un proyecto de datos. Tiene como objetivo obtener un dominio de los datos para su posterior análisis. Tenemos que conocer profundamente los datos tanto en su formato como contenido. Tareas típicas pueden ser la selección de características o variables, la preparación del juego de datos para posteriormente ser consumido por un algoritmo e intentar extraer el máximo conocimiento posible de los datos.
+
+
+## Limpieza de los datos
+* Como paso previo procedemos a instalamos y cargar las librerías ggplot2 y dplry.
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+# https://cran.r-project.org/web/packages/ggplot2/index.html
+if (!require('ggplot2')) install.packages('ggplot2'); library('ggplot2')
+# https://cran.r-project.org/web/packages/dplyr/index.html
+if (!require('dplyr')) install.packages('dplyr'); library('dplyr')
+```
+* Ahora cargaremos el fichero de datos.
+
+```{r}
+totalData <- read.csv('titanic.csv',stringsAsFactors = FALSE)
+filas=dim(totalData)[1]
+```
+
+* Procedemos a guardar los datos filtrados por tripulación "engineering crew" para hacer análisis posteriores.
+
+```{r}
+totalData_crew=subset(totalData, totalData$class=="engineering crew")
+```
+
+* Con el siguiente comando verificamos la estructura del data set principal.
+
+```{r}
+str(totalData)
+```
+Podemos observar que tenemos 2207 registros que se corresponden a los viajeros y tripulación del crucero y 11 variables que los caracterizan.
+
+Revisamos la descripción de las variables contenidas al fichero y si los tipos de variable se corresponde al que hemos cargado:
+
+**name**
+    string with the name of the passenger.
+    
+**gender**
+    factor with levels male and female.
+    
+**age**
+    numeric value with the persons age on the day of the sinking. The age of babies (under 12 months) is given as a fraction of one year (1/month).
+    
+**class**
+    factor specifying the class for passengers or the type of service aboard for crew members.
+    
+**embarked**
+    factor with the persons place of of embarkment.
+    
+**country**
+    factor with the persons home country.
+    
+**ticketno**
+    numeric value specifying the persons ticket number (NA for crew members).
+    
+**fare**
+    numeric value with the ticket price (NA for crew members, musicians and employees of the shipyard company).
+    
+**sibsp**
+    ordered factor specifying the number if siblings/spouses aboard; adopted from Vanderbild data set.
+    
+**parch**
+    an ordered factor specifying the number of parents/children aboard; adopted from Vanderbild data set.
+    
+**survived**
+    a factor with two levels (no and yes) specifying whether the person has survived the sinking.
+
+## Análisis de los datos
+* Ahora procedemos a sacar algunas estadísticas básicas y después analizaremos los atributos con valores vacíos.
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+summary(totalData)
+```
+* Por ejemplo estadísticas de valores vacíos.
+
+```{r}
+colSums(is.na(totalData))
+colSums(totalData=="")
+```
+
+* Para estos casos (81) de país, asignamos valor "Desconocido" para los valores vacíos de la variable "country".
+
+```{r}
+totalData$country[is.na(totalData$country)] <- "Desconocido"
+```
+
+* Para el caso de edad (2), asignamos la media para valores vacíos de la variable "age".
+
+```{r}
+totalData$age[is.na(totalData$age)] <- mean(totalData$age,na.rm=T)
+```
+
+De la información mostrada destacamos que el pasajero más joven tenía 6 meses y el más grande 74 años. La media de edad la tenían en 30 años. También podemos ver 891 sin billete. Revisaremos si se corresponde a la tripulación. También podemos observar el que se pagó por el billete. En este caso se entienden las discrepancias en la fiabilidad de este dato. Parece que los pasajeros que embarcaron a Southampton hacían transbordo de un barco que tenía la tripulación en huelga y por eso no tuvieron que pagar lo que explicaría la diferencia. Recordemos que la tripulación no pagaba. Sibsp y parch también muestran datos interesantes el viajero con quien más familiar viajaba eran 8 hermanos o mujer y 9 hijos o paro/madre.
+
+Si observamos los NA (valores nulos) vemos que los datos están bastante bien. Decidimos sustituir el valor NA de country por Desconocido por una mayor legibilidad. También proponemos sustituir los NA de age por la media a pesar de que realmente no hace falta.
+
+Es curios como los valores NA de sibsp y parch nos permite deducir que viajaban muchas familias. De hecho a simple vista, restante la tripulación la gente que viajaba sola era mínima. Este dato la podríamos contrastar también. Sería interesante relacionar la mortalidad del accidente con el tamaño de las familias que viajaban.
+
+
+## Pruebas estadísticas
+* Ahora añadiremos un campo nuevo a los datos. Este campos contendrá el valor de la edad discretitzada con un método simple de intervalos de igual amplitud.
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+summary(totalData[,"age"])
+```
+
+* Procedemos a discretizar con intervalos.
+
+```{r}
+totalData["segmento_edad"] <- cut(totalData$age, breaks = c(0,10,20,30,40,50,60,70,100), labels = c("0-9", "10-19", "20-29", "30-39","40-49","50-59","60-69","70-79"))
+```
+
+* Y Observamos los datos discretizados.
+
+```{r}
+head(totalData)
+```
+
+* Ahora podemos ver como se agrupaban por grupos de edad.
+
+```{r}
+plot(totalData$segmento_edad,main="Número de pasajeros por grupos de edad",xlab="Edad", ylab="Cantidad",col = "ivory")
+```
+
+* Procedemos a repetir los pasos anteriores pero solo sobre el subconjunto de tripulación filtrado antes "engineering crew".
+
+```{r}
+totalData_crew["segmento_edad"] <- cut(totalData_crew$age, breaks = c(0,10,20,30,40,50,60,70,100), labels = c("0-9", "10-19", "20-29", "30-39","40-49","50-59","60-69","70-79"))
+plot(totalData_crew$segmento_edad,main="Número de tripulantes por grupos de edad",xlab="Edad", ylab="Cantidad",col = "ivory")
+```
+De la discretización de la edad observamos que realmente la gente que viajaba era muy joven. El segmento más grande era de 20 a 29 años. También podemos observar la juventud de la tripulación del crucero.
+
+
+* Como alternativa a la discretización realizada discretizaremos ahora edad con kmeans.
+
+```{r}
+# https://cran.r-project.org/web/packages/arules/index.html
+if (!require('arules')) install.packages('arules'); library('arules')
+set.seed(2)
+table(discretize(totalData$age, "cluster" ))
+hist(totalData$age, main="Número de pasajeros por grupos de edad con kmeans",xlab="Edad", ylab="Cantidad",col = "ivory")
+abline(v=discretize(totalData$age, method="cluster", onlycuts=TRUE),col="red")
+```
+
+* Podemos observar que sin pasar ningún argumento y que el algoritmo escoja el conjunto de particiones se muestran tres clústeres que agrupan las edades en las franjas mencionadas. Podemos asignar el propio clúster como una variable más al dataset para trabajar después.
+
+```{r}
+totalData$edad_KM <- (discretize(totalData$age, "cluster" ))
+head(totalData)
+```
+
+* Ahora normalizaremos la edad de los pasajeros por el máximo, añadiendo un nuevo valor a los datos que contendrá el valor.
+
+```{r}
+totalData$age_NM <- (totalData$age/max(totalData[,"age"]))
+head(totalData$age_NM)
+```
+* Supongamos que queremos normalizar por la diferencia para ubicar entre 0 y 1 la variable edad del pasajero dado que el algoritmo de minería que utilizaremos así lo requiere. observamos la distribución de la variable original y las tres generadas
+
+```{r}
+totalData$age_ND = (totalData$age-min(totalData$age))/(max(totalData$age)-min(totalData$age))
+
+max(totalData$age)
+min(totalData$age)
+hist(totalData$age,xlab="Edad", col="ivory",ylab="Cantidad", main="Número de pasajeros por grupos de edad")
+hist(totalData$age_NM,xlab="Edad normalizada por el máximo", ylab="Cantidad",col="ivory", main="Número de pasajeros por grupos de edad")
+hist(totalData$age_ND,xlab="Edad normalizada por la diferencia",ylab="Cantidad", col="ivory", main="Número de pasajeros por grupos de edad")
+```
+
+## Procesos de análisis visuales del juego de datos
+* Nos proponemos analizar las relaciones entre las diferentes variables del juego de datos para ver si se relacionan y como. Visualizamos la relación entre las variables "gender" y "survived":
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+ggplot(data=totalData[1:filas,],aes(x=gender,fill=survived))+geom_bar()+ggtitle("Relación entre las variables gender y survived")
+```
+* Otro punto de vista. Survived como función de Embarked:
+
+```{r}
+ggplot(data=totalData[1:filas,],aes(x=embarked,fill=survived))+geom_bar(position="fill")+ylab("Frequència")+ggtitle("Survived como función de Embarked")
+```
+
+* En la primera gráfica podemos observar fácilmente la cantidad de mujeres que viajaban respecto hombres y observar los que no sobrevivieron. Numéricamente el número de hombres y mujeres supervivientes es similar.
+
+* En la segunda gráfica de forma porcentual observamos los puertos de embarque y los porcentajes de supervivencia en función del puerto. Se podría trabajar el puerto C (Cherburgo) para ver de explicar la diferencia en los datos. Quizás porcentualmente embarcaron más mujeres o niños... ¿O gente de primera clase?
+
+*Obtenemos ahora una matriz de porcentajes de frecuencia. Vemos, por ejemplo que la probabilidad de sobrevivir si se embarcó en "C" es de un 56.45%
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+t<-table(totalData[1:filas,]$embarked,totalData[1:filas,]$survived)
+for (i in 1:dim(t)[1]){
+    t[i,]<-t[i,]/sum(t[i,])*100
+}
+t
+```
+
+* Veamos ahora como en un mismo gráfico de frecuencias podemos trabajar con 3 variables: Embarked, Survived y class. Mostramos el gráfico de embarcados por class:
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+ggplot(data = totalData[1:filas,],aes(x=embarked,fill=survived))+geom_bar(position="fill")+facet_wrap(~class)+ggtitle("Pasajeros por clase, puerto de origen y relación con survived")
+```
+
+* Aquí ya podemos extraer mucha información. Como propuesta de mejora se podría hacer un gráfico similar trabajando solo la clase. Habría que unificar toda la tripulación a una única categoría.
+
+* Comparamos ahora dos gráficos de frecuencias: Survived-SibSp y Survived-Parch
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+ggplot(data = totalData[1:filas,],aes(x=sibsp,fill=survived))+geom_bar()+ggtitle("Sobrevivir en función de tener a bordo cónyuges y/o hermanos")
+ggplot(data = totalData[1:filas,],aes(x=parch,fill=survived))+geom_bar()+ggtitle("Sobrevivir en función de tener a bordo padres y/o hijos")
+```
+
+* Vemos como la forma de estos dos gráficos es similar. Este hecho nos puede indicar presencia de correlaciones altas. Hecho previsible en función de la descripción de las variables.
+
+* Veamos un ejemplo de construcción de una variable nueva: Tamaño de familia.
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+totalData$FamilySize <- totalData$sibsp + totalData$parch +1;
+totalData1<-totalData[1:filas,]
+ggplot(data = totalData1[!is.na(totalData[1:filas,]$FamilySize),],aes(x=FamilySize,fill=survived))+geom_histogram(binwidth =1,position="fill")+ylab("Frecuencia")+ggtitle("Sobrevivir en función del número de familiares a bordo")
+```
+* Se confirma el hecho de que los pasajeros viajaban mayoritariamente en familia. No podemos afirmar que el tamaño de la familia tuviera nada que ver con la posibilidad de sobrevivir pues nos tememos que estadísticamente el hecho de haber más familias de alrededor de cuatro miembros debería de ser habitual. Es un punto de partida para investigar más.
+
+* Veamos ahora dos gráficos que nos comparan los atributos Age y Survived. Observamos como el parámetro position="fill" nos da la proporción acumulada de un atributo dentro de otro.
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+ggplot(data = totalData1[!(is.na(totalData[1:filas,]$age)),],aes(x=age,fill=survived))+geom_histogram(binwidth =3)+ggtitle("Sobrevivir en función de edad")
+ggplot(data = totalData1[!is.na(totalData[1:filas,]$age),],aes(x=age,fill=survived))+geom_histogram(binwidth = 3,position="fill")+ylab("Frecuencia")+ggtitle("Sobrevivir en función de edad")
+```
+
+* Observamos como el parámetro position="hijo" nos da la proporción acumulada de un atributo dentro de otro. Parece que los niños tuvieron más posibilidad de salvarse.
+
+* Vamos a probar si hay una correlación entre la edad del pasajero y el que pagó por el viaje.
+
+```{R}
+# https://cran.r-project.org/web/packages/tidyverse/index.html
+if (!require('tidyverse')) install.packages('tidyverse'); library('tidyverse')
+cor.test(x = totalData$age, y = totalData$fare, method = "pearson")
+ggplot(data = totalData, aes(x = age, y = log(fare))) + geom_point(color = "gray30") + geom_smooth(color = "firebrick") + theme_bw() +ggtitle("Correlación entre precio billete y edad")
+```
+
+* Cómo podemos observar no parece haber correlación lineal entre la edad del pasajero y el precio del billete. El diagrama de dispersión tampoco apunta a ningún tipo de relación no lineal evidente.
+
+## Conclusiones
+Los datos tienen una calidad correcta y están mayoritariamente bien informados. Disponen de una variable de clase "survived" que los hace aptos para un clasificador. A parte de la mayor supervivencia de mujeres y niños y de pasajeros de primera clase podemos observar la juventud de los pasajeros y la tripulación. Se observa también una gran cantidad de personas que viajaban en familia.
+
+****
+# Recursos
+****
+Los siguientes recursos son de utilidad para la realización de la práctica:
+* Calvo M., Subirats L., Pérez D. (2019). Introducción a la limpieza y análisis de los datos. Editorial UOC.
+* Megan Squire (2015). Clean Data. Packt Publishing Ltd.
+* Jiawei Han, Micheine Kamber, Jian Pei (2012). Data mining: concepts and techniques. Morgan Kaufmann.
+* Jason W. Osborne (2010). Data Cleaning Basics: Best Practices in Dealing with Extreme Scores. Newborn and Infant Nursing Reviews; 10 (1): pp. 1527-3369.
+*Peter Dalgaard (2008). Introductory statistics with R. Springer Science & Business Media. Wes McKinney (2012). Python for Data Analysis. O’Reilley Media, Inc.
+* Tutorial de Github https://guides.github.com/activities/hello-world.
